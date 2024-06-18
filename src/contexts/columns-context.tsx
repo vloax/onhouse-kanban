@@ -11,6 +11,7 @@ interface ColumnsContextType {
   setColumns: (columns: IColunas[]) => void;
   addCardToColumn: (columnId: number, card: ICard) => void;
   moveCardToColumn: (fromColumnId: number, toColumnId: number, cardId: number) => void;
+  removeColumn?: (columnId: number) => void;
 }
 
 const ColumnsContext = createContext<ColumnsContextType | undefined>(undefined);
@@ -61,8 +62,13 @@ export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const removeColumn = (columnId: number) => {
+    const updatedColumns = columns.filter(column => column.id !== columnId);
+    updateColumns(updatedColumns);
+  }
+
   return (
-    <ColumnsContext.Provider value={{ columns, setColumns: updateColumns, addCardToColumn, moveCardToColumn }}>
+    <ColumnsContext.Provider value={{ columns, setColumns: updateColumns, addCardToColumn, moveCardToColumn, removeColumn }}>
       {children}
     </ColumnsContext.Provider>
   );

@@ -14,10 +14,11 @@ export default function AppColumns() {
   const [cardDescription, setCardDescription] = useState('');
   const [activeColumnId, setActiveColumnId] = useState<number | null>(null);
   const [draggingCard, setDraggingCard] = useState<ICard | null>(null);
+  const [isDraggingOverCard, setIsDraggingOverCard] = useState<number | null>(null);
 
   const handleAddCard = (columnId: number) => {
     if (cardText.trim() === '') return;
-    const newCard: ICard = { id: Date.now(), titulo: cardText, descricao: cardDescription, data: new Date().toISOString(), colunaId: columnId};
+    const newCard: ICard = { id: Date.now(), titulo: cardText, descricao: cardDescription, data: new Date().toISOString(), colunaId: columnId };
     addCardToColumn(columnId, newCard);
     setCardText('');
     setCardDescription('');
@@ -28,26 +29,54 @@ export default function AppColumns() {
     setDraggingCard(card);
   };
 
+  const handleDragEnter = (cardId: number) => {
+    setIsDraggingOverCard(cardId);
+  };
+
+  const handleDragLeave = () => {
+    setIsDraggingOverCard(null);
+  };
+
   const handleDrop = (columnId: number) => {
     if (draggingCard) {
       moveCardToColumn(draggingCard.colunaId, columnId, draggingCard.id);
       setDraggingCard(null);
+      setIsDraggingOverCard(null);
     }
   };
 
   return (
     <ColumnContainer>
       {columns?.map((column: IColunas) => (
-        <Column  onDragOver={(e) => e.preventDefault()}
-        onDrop={() => handleDrop(column.id)} key={column.id} title={column.nome}>
+        <Column
+          columnId={column.id}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={() => handleDrop(column.id)}
+          key={column.id}
+          title={column.nome}
+        >
           {column.cards?.map((card) => (
-            <div  onDragStart={() => handleDragStart(card)} draggable key={card.id} className="bg-[#2C2C2C] p-2 mb-2 flex flex-col rounded-md shadow-md">
+            <>
+            <div
+              onDragStart={() => handleDragStart(card)}
+              onDragEnter={() => handleDragEnter(card.id)}
+              onDragLeave={handleDragLeave}
+              draggable
+              key={card.id}
+              className="bg-[#2C2C2C] p-2 mb-2 flex flex-col rounded-md shadow-md"
+            >
               <h1 className="text-lg font-bold mb-[-4px]">{card.titulo}</h1>
               <p className="text-sm">{card.descricao}</p>
+
             </div>
+        
+            {isDraggingOverCard === card.id && (
+                <div className="w-full h-1 mt-4 bg-blue-500 rounded-md" />
+             )}
+        </>
           ))}
           {activeColumnId === column.id && (
-            <div className="mt-2 ">
+            <div className="mt-2">
               <input
                 type="text"
                 value={cardText}
