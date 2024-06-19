@@ -4,7 +4,7 @@ import { useColumns } from "@/contexts/columns-context";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
 
-export default function Column({title, children, onDragOver, onDrop, columnId}: {title: string, children: React.ReactNode, onDragOver?: (e: React.DragEvent) => void, onDrop?: (e: React.DragEvent) => void, columnId: number}) {
+export default function Column({ title, children, onDragOver, onDrop, columnId }: { title: string, children: React.ReactNode, onDragOver?: (e: React.DragEvent) => void, onDrop?: (e: React.DragEvent) => void, columnId: number }) {
   
   const { removeColumn } = useColumns();
 
@@ -27,21 +27,18 @@ export default function Column({title, children, onDragOver, onDrop, columnId}: 
 
   return (
     <div
-      draggable
-      className={`flex rounded-md flex-col h-3/4 w-96 gap-5 ${
-        isDraggingOver ? "border-2 border-hem bg-mem" : "bg-mem"
-      }`}      
+      className={`flex rounded-md flex-col h-[80vh] w-96 gap-5 ${isDraggingOver ? "border-2 border-hem bg-mem" : "bg-mem"}`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
       <div className="flex justify-between w-full items-center">
         <h1 className="text-xl p-2 font-bold">{title}</h1>
-        <TrashIcon onClick={() => removeColumn && removeColumn(columnId)}  className="h-5 w-5 m-2 cursor-pointer" />
+        <TrashIcon onClick={() => removeColumn && removeColumn(columnId)} className="h-5 w-5 m-2 cursor-pointer" />
       </div>
-      <div className="w-full p-3">
+      <div className="w-full p-3 overflow-y-auto max-h-full">
         {children}
       </div>
     </div>
-  )
+  );
 }

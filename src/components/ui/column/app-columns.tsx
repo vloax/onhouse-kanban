@@ -76,7 +76,7 @@ export default function AppColumns() {
         </>
           ))}
           {activeColumnId === column.id && (
-            <div className="mt-2">
+            <div className="mt-3 bg-gray-600 p-4 my-4 rounded-md border-2 ">
               <input
                 type="text"
                 value={cardText}
@@ -91,12 +91,22 @@ export default function AppColumns() {
                 placeholder="Descrição do card"
                 className="w-full p-2 border bg-bgcool rounded-md"
               />
+              <div className="
+                flex flex-row gap-2 
+              " >
               <button
                 onClick={() => handleAddCard(column.id)}
                 className="w-full mt-2 bg-green-500 text-white p-2 rounded-md"
               >
                 Adicionar
               </button>
+              <button className="
+                w-full mt-2 bg-red-500 text-white p-2 rounded-md"
+                onClick={() => setActiveColumnId(null)}
+                >
+                Cancelar
+              </button>
+              </div>
             </div>
           )}
           <button

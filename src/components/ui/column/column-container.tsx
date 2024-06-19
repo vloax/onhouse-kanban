@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
-export default function ColumnContainer({children, }: {children: React.ReactNode}) {
+export default function ColumnContainer({ children }: { children: React.ReactNode }) {
   return (
-    <div  className="flex flex-row w-fit max-h-3/4 gap-5 m-5 overflow-auto">
+    <div className="flex flex-row w-fit h-full gap-5 m-5 overflow-x-auto">
       {children}
     </div>
-  )
+  );
 }

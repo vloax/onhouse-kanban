@@ -16,7 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={`${dm.className} h-3/4 bg-bgcool text-white`}>{children}</body>
+      <body className={`${dm.className} overflow-x-hidden overflow-y-hidden w-full h-full bg-bgcool text-white`}>
+        <div className="overflow-x-auto w-full h-full">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
