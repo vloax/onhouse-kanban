@@ -1,7 +1,7 @@
 'use client';
 
 import { useColumns } from "@/contexts/columns-context";
-import { ITag } from "@/interfaces/ICard"; // Certifique-se de importar ITag corretamente
+import { ITag } from "@/interfaces/ITag"; 
 import { Dialog, DialogPanel, Transition, TransitionChild } from "@headlessui/react";
 import { useEffect, useState } from "react";
 

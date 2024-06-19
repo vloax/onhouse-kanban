@@ -1,7 +1,4 @@
-export interface ITag {
-  text: string;
-  color: string;
-}
+import { ITag } from './ITag';
 
 export interface ICard {
   id: number;
