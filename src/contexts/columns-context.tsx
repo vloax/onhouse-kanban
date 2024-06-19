@@ -47,6 +47,10 @@ export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
       const toColumn = prevColumns.find(column => column.id === toColumnId);
       const card = fromColumn?.cards.find(card => card.id === cardId);
 
+      if (fromColumn == toColumn) {
+        return prevColumns;
+      }
+
       if (fromColumn && toColumn && card) {
         return prevColumns.map(column => {
           if (column.id === fromColumnId) {

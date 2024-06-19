@@ -63,7 +63,7 @@ export default function AppColumns() {
               onDragLeave={handleDragLeave}
               draggable
               key={card.id}
-              className="bg-[#2C2C2C] p-2 mb-2 flex flex-col rounded-md shadow-md"
+              className={`bg-[#2C2C2C] p-2 mb-2 flex flex-col rounded-md shadow-md ${isDraggingOverCard === card.id ? "border-2 border-blue-500" : ""} ${card.id == draggingCard?.id ? "opacity-100 border-2 border-blue-400" : ""}`}
             >
               <h1 className="text-lg font-bold mb-[-4px]">{card.titulo}</h1>
               <p className="text-sm">{card.descricao}</p>
