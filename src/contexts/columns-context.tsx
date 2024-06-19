@@ -1,18 +1,11 @@
 // context/ColumnsContext.tsx
 'use client';
 
-import ICard from '@/interfaces/ICard';
+import { ICard } from '@/interfaces/ICard';
+import ColumnsContextType from '@/interfaces/IColumns';
 import IColunas from '@/interfaces/IColunas';
 import { GetLocalStorage, SetLocalStorage } from '@/utils/handle-storage';
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
-
-interface ColumnsContextType {
-  columns: IColunas[];
-  setColumns: (columns: IColunas[]) => void;
-  addCardToColumn: (columnId: number, card: ICard) => void;
-  moveCardToColumn: (fromColumnId: number, toColumnId: number, cardId: number) => void;
-  removeColumn?: (columnId: number) => void;
-}
 
 const ColumnsContext = createContext<ColumnsContextType | undefined>(undefined);
 
@@ -47,7 +40,7 @@ export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
       const toColumn = prevColumns.find(column => column.id === toColumnId);
       const card = fromColumn?.cards.find(card => card.id === cardId);
 
-      if (fromColumn == toColumn) {
+      if (fromColumn === toColumn) {
         return prevColumns;
       }
 
@@ -66,13 +59,57 @@ export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const moveColumn = (fromColumnId: number, toColumnId: number) => {
+    const fromColumnIndex = columns.findIndex(column => column.id === fromColumnId);
+    const toColumnIndex = columns.findIndex(column => column.id === toColumnId);
+    const updatedColumns = [...columns];
+    const [removedColumn] = updatedColumns.splice(fromColumnIndex, 1);
+    updatedColumns.splice(toColumnIndex, 0, removedColumn);
+    updateColumns(updatedColumns);
+  };
+
   const removeColumn = (columnId: number) => {
     const updatedColumns = columns.filter(column => column.id !== columnId);
     updateColumns(updatedColumns);
-  }
+  };
+
+  const removeCard = (columnId: number, cardId: number) => {
+    const updatedColumns = columns.map(column => {
+      if (column.id === columnId) {
+        return { ...column, cards: column.cards.filter(card => card.id !== cardId) };
+      }
+      return column;
+    });
+    updateColumns(updatedColumns);
+  };
+
+  const findOneCardById = (cardId: number) => {
+    let card: ICard | null = null;
+    columns.forEach(column => {
+      column.cards.forEach(c => {
+        if (c.id === cardId) {
+          card = c;
+        }
+      });
+    });
+    return card;
+  };
+
+  const updateCard = (cardId: number, updatedFields: Partial<ICard>) => {
+    const updatedColumns = columns.map(column => {
+      const updatedCards = column.cards.map(card => {
+        if (card.id === cardId) {
+          return { ...card, ...updatedFields };
+        }
+        return card;
+      });
+      return { ...column, cards: updatedCards };
+    });
+    updateColumns(updatedColumns);
+  };
 
   return (
-    <ColumnsContext.Provider value={{ columns, setColumns: updateColumns, addCardToColumn, moveCardToColumn, removeColumn }}>
+    <ColumnsContext.Provider value={{ columns, setColumns: updateColumns, addCardToColumn, moveCardToColumn, removeColumn, removeCard, moveColumn, findOneCardById, updateCard }}>
       {children}
     </ColumnsContext.Provider>
   );

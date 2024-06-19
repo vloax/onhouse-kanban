@@ -2,9 +2,10 @@
 
 import PlusIcon from "@/components/icons/plus-icon";
 import { useColumns } from "@/contexts/columns-context";
-import ICard from "@/interfaces/ICard";
+import { ICard } from "@/interfaces/ICard";
 import IColunas from "@/interfaces/IColunas";
 import { useState } from "react";
+import Card from "../card/card";
 import Column from "./column";
 import ColumnContainer from "./column-container";
 
@@ -55,28 +56,15 @@ export default function AppColumns() {
           key={column.id}
           title={column.nome}
         >
-          {column.cards?.map((card) => (
-            <>
-            <div
-              onDragStart={() => handleDragStart(card)}
-              onDragEnter={() => handleDragEnter(card.id)}
-              onDragLeave={handleDragLeave}
-              draggable
-              key={card.id}
-              className={`bg-[#2C2C2C] p-2 mb-2 flex flex-col rounded-md shadow-md ${isDraggingOverCard === card.id ? "border-2 border-blue-500" : ""} ${card.id == draggingCard?.id ? "opacity-100 border-2 border-blue-400" : ""}`}
-            >
-              <h1 className="text-lg font-bold mb-[-4px]">{card.titulo}</h1>
-              <p className="text-sm">{card.descricao}</p>
-
-            </div>
-        
-            {isDraggingOverCard === card.id && (
-                <div className="w-full h-1 mt-4 bg-blue-500 rounded-md" />
-             )}
-        </>
-          ))}
+          <button
+            className="w-full flex items-center justify-center text-center border-2 p-2 rounded-md gap-2 mb-2 mt-[-10px]"
+            onClick={() => setActiveColumnId(column.id)}
+          >
+            <PlusIcon />
+            Adicionar card
+          </button>
           {activeColumnId === column.id && (
-            <div className="mt-3 bg-gray-600 p-4 my-4 rounded-md border-2 ">
+            <div className="animate-fade animate-once animate-ease-linear duration-100 mt-3 bg-gray-600 p-4 my-4 rounded-md border-2 ">
               <input
                 type="text"
                 value={cardText}
@@ -109,13 +97,25 @@ export default function AppColumns() {
               </div>
             </div>
           )}
-          <button
-            className="w-full flex items-center justify-center text-center border-2 p-2 rounded-md gap-2 mt-2"
-            onClick={() => setActiveColumnId(column.id)}
-          >
-            <PlusIcon />
-            Adicionar card
-          </button>
+          {column.cards?.map((card) => (
+            <>
+            <Card
+              card={card}
+              columnId={column.id}
+              handleDragStart={handleDragStart}
+              handleDragEnter={handleDragEnter}
+              handleDragLeave={handleDragLeave}
+              isDraggingOverCard={isDraggingOverCard}
+              draggingCard={draggingCard}
+            />
+        
+            {isDraggingOverCard === card.id && (
+                <div className="w-full h-1 mt-4 bg-blue-500 rounded-md" />
+             )}
+        </>
+          ))}
+
+
         </Column>
       ))}
     </ColumnContainer>
