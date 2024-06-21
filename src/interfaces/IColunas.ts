@@ -4,4 +4,5 @@ export default interface IColunas {
   id: number;
   nome: string;
   cards: ICard[];
+  conclusionPercentage?: number;
 }

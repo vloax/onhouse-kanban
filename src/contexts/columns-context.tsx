@@ -20,6 +20,12 @@ export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const updateColumns = (newColumns: IColunas[]) => {
+    newColumns.forEach((column, index) => {
+      column.conclusionPercentage = Math.ceil(((index / (newColumns.length - 1)) * 100));
+      column.cards.forEach(card => {
+        card.porcentagemConclusao = column.conclusionPercentage;
+      });
+    });
     SetLocalStorage('columns', newColumns);
     setColumns(newColumns);
   };
@@ -27,38 +33,42 @@ export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
   const addCardToColumn = (columnId: number, card: ICard) => {
     const updatedColumns = columns.map(column => {
       if (column.id === columnId) {
-        return { ...column, cards: [...column.cards, card] };
+        const newCard = { ...card, porcentagemConclusao: column.conclusionPercentage };
+        return { ...column, cards: [...column.cards, newCard] };
       }
       return column;
     });
     updateColumns(updatedColumns);
   };
+  
 
   const moveCardToColumn = (fromColumnId: number, toColumnId: number, cardId: number) => {
     setColumns(prevColumns => {
       const fromColumn = prevColumns.find(column => column.id === fromColumnId);
       const toColumn = prevColumns.find(column => column.id === toColumnId);
       const card = fromColumn?.cards.find(card => card.id === cardId);
-
+  
       if (fromColumn === toColumn) {
         return prevColumns;
       }
-
+  
       if (fromColumn && toColumn && card) {
+        const updatedCard = { ...card, colunaId: toColumnId, porcentagemConclusao: toColumn.conclusionPercentage };
         return prevColumns.map(column => {
           if (column.id === fromColumnId) {
             return { ...column, cards: column.cards.filter(card => card.id !== cardId) };
           }
           if (column.id === toColumnId) {
-            return { ...column, cards: [...column.cards, { ...card, colunaId: toColumnId }] };
+            return { ...column, cards: [...column.cards, updatedCard] };
           }
           return column;
         });
       }
+  
       return prevColumns;
     });
   };
-
+  
   const moveColumn = (fromColumnId: number, toColumnId: number) => {
     const fromColumnIndex = columns.findIndex(column => column.id === fromColumnId);
     const toColumnIndex = columns.findIndex(column => column.id === toColumnId);

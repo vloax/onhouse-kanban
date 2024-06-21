@@ -12,7 +12,9 @@ export default function Home() {
   return (
    <ColumnsProvider>
       <Header open={open} setOpen={setOpen} />
-      <AppColumns />
+      <div className="flex flex-row w-full h-full overflow-x-auto">
+        <AppColumns />
+      </div>
       <DialogNewColumn open={open} setOpen={setOpen} />
    </ColumnsProvider>
   );

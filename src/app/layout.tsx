@@ -16,8 +16,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={`${dm.className} overflow-x-hidden overflow-y-hidden w-full h-full bg-cover bg-[url('/stars.jpeg')] text-white`}>
-        <div className="overflow-x-auto w-full h-full">
+      <body className={`${dm.className} overflow-hidden w-full h-full bg-cover bg-[url('/stars.jpeg')] text-white`}>
+        <div className="w-full h-full">
           {children}
         </div>
       </body>

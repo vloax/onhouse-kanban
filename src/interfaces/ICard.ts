@@ -6,5 +6,6 @@ export interface ICard {
   descricao: string;
   data: string;
   colunaId: number;
+  porcentagemConclusao?: number;
   tags?: ITag[];
 }

@@ -19,12 +19,15 @@ export default function AppColumns() {
 
   const handleAddCard = (columnId: number) => {
     if (cardText.trim() === '') return;
-    const newCard: ICard = { id: Date.now(), titulo: cardText, descricao: cardDescription, data: new Date().toISOString(), colunaId: columnId };
+    const column = columns.find(col => col.id === columnId);
+    const conclusionPercentage = column ? column.conclusionPercentage : 0;
+    const newCard: ICard = { id: Date.now(), titulo: cardText, descricao: cardDescription, data: new Date().toISOString(), colunaId: columnId, porcentagemConclusao: conclusionPercentage };
     addCardToColumn(columnId, newCard);
     setCardText('');
     setCardDescription('');
     setActiveColumnId(null);
   };
+  
 
   const handleDragStart = (card: ICard) => {
     setDraggingCard(card);
