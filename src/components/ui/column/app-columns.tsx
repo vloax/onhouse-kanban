@@ -27,19 +27,19 @@ export default function AppColumns() {
     setActiveColumnId(null);
   };
 
-  const handleDragStart = (card: ICard) => {
+  const handleCardDragStart = (card: ICard) => {
     setDraggingCard(card);
   };
 
-  const handleDragEnter = (cardId: number) => {
+  const handleCardDragEnter = (cardId: number) => {
     setIsDraggingOverCard(cardId);
   };
 
-  const handleDragLeave = () => {
+  const handleCardDragLeave = () => {
     setIsDraggingOverCard(null);
   };
 
-  const handleDrop = (columnId: number) => {
+  const handleCardDrop = (columnId: number) => {
     if (draggingCard) {
       moveCardToColumn(draggingCard.colunaId, columnId, draggingCard.id);
       setDraggingCard(null);
@@ -65,9 +65,10 @@ export default function AppColumns() {
           key={column.id}
           columnId={column.id}
           title={column.nome}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={() => handleColumnDrop(index)}
+          onColumnDragOver={(e) => e.preventDefault()}
+          onColumnDrop={() => handleColumnDrop(index)}
           onColumnDragStart={() => handleColumnDragStart(index)}
+          onCardDrop={() => handleCardDrop(column.id)}
         >
           <button
             className="w-full flex items-center justify-center text-center border-2 p-2 rounded-md gap-2 mb-2 mt-[-10px]"
@@ -114,9 +115,9 @@ export default function AppColumns() {
                 key={card.id}
                 card={card}
                 columnId={column.id}
-                handleDragStart={handleDragStart}
-                handleDragEnter={handleDragEnter}
-                handleDragLeave={handleDragLeave}
+                handleDragStart={handleCardDragStart}
+                handleDragEnter={handleCardDragEnter}
+                handleDragLeave={handleCardDragLeave}
                 isDraggingOverCard={isDraggingOverCard}
                 draggingCard={draggingCard}
               />

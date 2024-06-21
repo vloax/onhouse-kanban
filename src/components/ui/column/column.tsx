@@ -2,16 +2,24 @@ import { useColumns } from "@/contexts/columns-context";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
 
-export default function Column({ title, children, onDragOver, onDrop, columnId, onColumnDragStart }: { title: string, children: React.ReactNode, onDragOver?: (e: React.DragEvent) => void, onDrop?: (e: React.DragEvent) => void, columnId: number, onColumnDragStart?: () => void }) {
-  
-  const { removeColumn } = useColumns();
+interface ColumnProps {
+  title: string;
+  children: React.ReactNode;
+  onColumnDragOver?: (e: React.DragEvent) => void;
+  onColumnDrop?: (e: React.DragEvent) => void;
+  columnId: number;
+  onColumnDragStart?: () => void;
+  onCardDrop?: () => void;
+}
 
+export default function Column({ title, children, onColumnDragOver, onColumnDrop, columnId, onColumnDragStart, onCardDrop }: ColumnProps) {
+  const { removeColumn } = useColumns();
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDraggingOver(true);
-    if (onDragOver) onDragOver(e);
+    if (onColumnDragOver) onColumnDragOver(e);
   };
 
   const handleDragLeave = () => {
@@ -20,7 +28,8 @@ export default function Column({ title, children, onDragOver, onDrop, columnId, 
 
   const handleDrop = (e: React.DragEvent) => {
     setIsDraggingOver(false);
-    if (onDrop) onDrop(e);
+    if (onColumnDrop) onColumnDrop(e);
+    if (onCardDrop) onCardDrop();
   };
 
   return (
