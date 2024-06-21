@@ -1,4 +1,3 @@
-// context/ColumnsContext.tsx
 'use client';
 
 import { ICard } from '@/interfaces/ICard';
@@ -21,7 +20,7 @@ export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
 
   const updateColumns = (newColumns: IColunas[]) => {
     newColumns.forEach((column, index) => {
-      column.conclusionPercentage = Math.ceil(((index / (newColumns.length - 1)) * 100));
+      column.conclusionPercentage = Math.ceil((index / (newColumns.length - 1)) * 100);
       column.cards.forEach(card => {
         card.porcentagemConclusao = column.conclusionPercentage;
       });
@@ -40,18 +39,17 @@ export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
     });
     updateColumns(updatedColumns);
   };
-  
 
   const moveCardToColumn = (fromColumnId: number, toColumnId: number, cardId: number) => {
     setColumns(prevColumns => {
       const fromColumn = prevColumns.find(column => column.id === fromColumnId);
       const toColumn = prevColumns.find(column => column.id === toColumnId);
       const card = fromColumn?.cards.find(card => card.id === cardId);
-  
+
       if (fromColumn === toColumn) {
         return prevColumns;
       }
-  
+
       if (fromColumn && toColumn && card) {
         const updatedCard = { ...card, colunaId: toColumnId, porcentagemConclusao: toColumn.conclusionPercentage };
         return prevColumns.map(column => {
@@ -64,17 +62,16 @@ export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
           return column;
         });
       }
-  
+
       return prevColumns;
     });
   };
-  
-  const moveColumn = (fromColumnId: number, toColumnId: number) => {
-    const fromColumnIndex = columns.findIndex(column => column.id === fromColumnId);
-    const toColumnIndex = columns.findIndex(column => column.id === toColumnId);
+
+  const moveColumn = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex) return;
     const updatedColumns = [...columns];
-    const [removedColumn] = updatedColumns.splice(fromColumnIndex, 1);
-    updatedColumns.splice(toColumnIndex, 0, removedColumn);
+    const [movedColumn] = updatedColumns.splice(fromIndex, 1);
+    updatedColumns.splice(toIndex, 0, movedColumn);
     updateColumns(updatedColumns);
   };
 

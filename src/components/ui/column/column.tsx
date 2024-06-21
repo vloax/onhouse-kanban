@@ -1,10 +1,8 @@
-'use client';
-
 import { useColumns } from "@/contexts/columns-context";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
 
-export default function Column({ title, children, onDragOver, onDrop, columnId }: { title: string, children: React.ReactNode, onDragOver?: (e: React.DragEvent) => void, onDrop?: (e: React.DragEvent) => void, columnId: number }) {
+export default function Column({ title, children, onDragOver, onDrop, columnId, onColumnDragStart }: { title: string, children: React.ReactNode, onDragOver?: (e: React.DragEvent) => void, onDrop?: (e: React.DragEvent) => void, columnId: number, onColumnDragStart?: () => void }) {
   
   const { removeColumn } = useColumns();
 
@@ -31,6 +29,8 @@ export default function Column({ title, children, onDragOver, onDrop, columnId }
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      draggable
+      onDragStart={onColumnDragStart}
     >
       <div className="flex justify-between w-full items-center">
         <h1 className="text-xl p-2 font-bold">{title}</h1>

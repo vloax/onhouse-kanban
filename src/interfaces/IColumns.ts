@@ -10,9 +10,9 @@ export default interface ColumnsContextType {
     toColumnId: number,
     cardId: number,
   ) => void;
+  moveColumn: (fromIndex: number, toIndex: number) => void;
   removeColumn: (columnId: number) => void;
   removeCard: (columnId: number, cardId: number) => void;
-  moveColumn: (fromColumnId: number, toColumnId: number) => void;
   findOneCardById: (cardId: number) => ICard | null;
   updateCard: (cardId: number, updatedFields: Partial<ICard>) => void;
 }

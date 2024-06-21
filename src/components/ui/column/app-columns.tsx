@@ -1,5 +1,3 @@
-'use client';
-
 import PlusIcon from "@/components/icons/plus-icon";
 import { useColumns } from "@/contexts/columns-context";
 import { ICard } from "@/interfaces/ICard";
@@ -10,12 +8,13 @@ import Column from "./column";
 import ColumnContainer from "./column-container";
 
 export default function AppColumns() {
-  const { columns, addCardToColumn, moveCardToColumn } = useColumns();
+  const { columns, addCardToColumn, moveCardToColumn, moveColumn } = useColumns();
   const [cardText, setCardText] = useState('');
   const [cardDescription, setCardDescription] = useState('');
   const [activeColumnId, setActiveColumnId] = useState<number | null>(null);
   const [draggingCard, setDraggingCard] = useState<ICard | null>(null);
   const [isDraggingOverCard, setIsDraggingOverCard] = useState<number | null>(null);
+  const [draggingColumnIndex, setDraggingColumnIndex] = useState<number | null>(null);
 
   const handleAddCard = (columnId: number) => {
     if (cardText.trim() === '') return;
@@ -27,7 +26,6 @@ export default function AppColumns() {
     setCardDescription('');
     setActiveColumnId(null);
   };
-  
 
   const handleDragStart = (card: ICard) => {
     setDraggingCard(card);
@@ -49,15 +47,27 @@ export default function AppColumns() {
     }
   };
 
+  const handleColumnDragStart = (index: number) => {
+    setDraggingColumnIndex(index);
+  };
+
+  const handleColumnDrop = (targetIndex: number) => {
+    if (draggingColumnIndex !== null && draggingColumnIndex !== targetIndex) {
+      moveColumn(draggingColumnIndex, targetIndex);
+      setDraggingColumnIndex(null);
+    }
+  };
+
   return (
     <ColumnContainer>
-      {columns?.map((column: IColunas) => (
+      {columns?.map((column: IColunas, index: number) => (
         <Column
-          columnId={column.id}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={() => handleDrop(column.id)}
           key={column.id}
+          columnId={column.id}
           title={column.nome}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={() => handleColumnDrop(index)}
+          onColumnDragStart={() => handleColumnDragStart(index)}
         >
           <button
             className="w-full flex items-center justify-center text-center border-2 p-2 rounded-md gap-2 mb-2 mt-[-10px]"
@@ -82,43 +92,39 @@ export default function AppColumns() {
                 placeholder="Descrição do card"
                 className="w-full p-2 border bg-bgcool rounded-md"
               />
-              <div className="
-                flex flex-row gap-2 
-              " >
-              <button
-                onClick={() => handleAddCard(column.id)}
-                className="w-full mt-2 bg-green-500 text-white p-2 rounded-md"
-              >
-                Adicionar
-              </button>
-              <button className="
-                w-full mt-2 bg-red-500 text-white p-2 rounded-md"
-                onClick={() => setActiveColumnId(null)}
+              <div className="flex flex-row gap-2">
+                <button
+                  onClick={() => handleAddCard(column.id)}
+                  className="w-full mt-2 bg-green-500 text-white p-2 rounded-md"
                 >
-                Cancelar
-              </button>
+                  Adicionar
+                </button>
+                <button
+                  className="w-full mt-2 bg-red-500 text-white p-2 rounded-md"
+                  onClick={() => setActiveColumnId(null)}
+                >
+                  Cancelar
+                </button>
               </div>
             </div>
           )}
           {column.cards?.map((card) => (
             <>
-            <Card
-              card={card}
-              columnId={column.id}
-              handleDragStart={handleDragStart}
-              handleDragEnter={handleDragEnter}
-              handleDragLeave={handleDragLeave}
-              isDraggingOverCard={isDraggingOverCard}
-              draggingCard={draggingCard}
-            />
-        
-            {isDraggingOverCard === card.id && (
+              <Card
+                key={card.id}
+                card={card}
+                columnId={column.id}
+                handleDragStart={handleDragStart}
+                handleDragEnter={handleDragEnter}
+                handleDragLeave={handleDragLeave}
+                isDraggingOverCard={isDraggingOverCard}
+                draggingCard={draggingCard}
+              />
+              {isDraggingOverCard === card.id && (
                 <div className="w-full h-1 mt-4 bg-blue-500 rounded-md" />
-             )}
-        </>
+              )}
+            </>
           ))}
-
-
         </Column>
       ))}
     </ColumnContainer>
