@@ -34,7 +34,7 @@ export default function Column({ title, children, onColumnDragOver, onColumnDrop
 
   return (
     <div
-      className={`flex rounded-md flex-col h-[80vh] w-96 gap-5 ${isDraggingOver ? "border-2 border-hem bg-mem" : "bg-mem"}`}
+      className={`flex rounded-md flex-col h-[80vh] min-w-64 md:min-w-80 w-96 gap-5 ${isDraggingOver ? "border-2 border-hem bg-mem" : "bg-mem"}`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}

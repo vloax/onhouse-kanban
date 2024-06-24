@@ -10,6 +10,7 @@ const ColumnsContext = createContext<ColumnsContextType | undefined>(undefined);
 
 export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
   const [columns, setColumns] = useState<IColunas[]>([]);
+  const [isDraggingCard, setIsDraggingCard] = useState(false);
 
   useEffect(() => {
     const storedColumns = GetLocalStorage('columns');
@@ -41,6 +42,7 @@ export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const moveCardToColumn = (fromColumnId: number, toColumnId: number, cardId: number) => {
+    setIsDraggingCard(true);
     setColumns(prevColumns => {
       const fromColumn = prevColumns.find(column => column.id === fromColumnId);
       const toColumn = prevColumns.find(column => column.id === toColumnId);
@@ -68,6 +70,11 @@ export const ColumnsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const moveColumn = (fromIndex: number, toIndex: number) => {
+    if (isDraggingCard) {
+      setIsDraggingCard(false);
+      return;
+    }
+
     if (fromIndex === toIndex) return;
     const updatedColumns = [...columns];
     const [movedColumn] = updatedColumns.splice(fromIndex, 1);
